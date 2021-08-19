@@ -1,6 +1,12 @@
 
 import './App.css';
+import MessageList from './MessageList';
+import MessageInput from './MessageInput';
 import React, { useState, useEffect } from 'react';
+import { makeStyles } from '@material-ui/core/styles';
+import Chats from './Chats';
+
+
 
 
 const structureMessage = {
@@ -9,16 +15,43 @@ const structureMessage = {
   time: ""
 };
 
+const useStyles = makeStyles((theme) => ({
+  appWrapper: {
+    height: '100vh',
+    width: '100vw',
+    display: 'flex',
+    justifyContent: 'center',
+    alignItems: 'center',
+    colors: theme
+  },
+  componentWrapper: {
+    width: '800px',
+    height: '800px',
+    border: '1px solid black',
+    display: 'flex',
+    flexDirection: "column",
+    backgroundColor: theme.palette.primary.main
 
+  },
+  arrayOfChats: {
+    width: '10%',
+    height: '800px',
+    border: '1px solid black',
+    backgroundColor: theme.palette.primary.main
+  },
+}))
 
 function App() {
 
   const [inputMessage, setInputMessage] = useState("");
   const [messagesArray, setmessagesArray] = useState([])
-  const onSendMessage = () => {
-    if (inputMessage !== "") {
+  const classes = useStyles();
+
+  const onSendMessage = (messageText) => {
+    if (messageText !== "") {
       var newMessage = Object.create(structureMessage);
-      newMessage.text = inputMessage
+
+      newMessage.text = messageText
       newMessage.time = new Date().toLocaleString();
       newMessage.author = "user"
       setmessagesArray(prev => [...prev, newMessage])
@@ -48,26 +81,17 @@ function App() {
   }
 
   return (
-    <div className="mainWrapper">
-      <div className="messageList">
-        {
-          messagesArray.map((message, i) => (<div key={i} className="inputText"> {message.author + ":" + message.text} <div className="time">{message.time}</div> </div>))
-        }
-
+    <div className={classes.appWrapper}>
+      <div className={classes.arrayOfChats}>
+        <Chats></Chats>
       </div>
+      <div className={classes.componentWrapper}>
 
-      <div className="inputWrapper">
-        <input className="input" value={inputMessage}
-          onChange={e => setInputMessage(e.target.value)}
-          onKeyDown={({ key }) => {
-            if (key === 'Enter') {
-              onSendMessage()
-            }
-          }} />
-        <button onClick={onSendMessage} className="buttonOnClick">Отправить</button>
+        <MessageList messagesArray={messagesArray} />
+        <MessageInput onSendMessage={onSendMessage} />
       </div>
-    </div>
-  );
+    </ div>);
+
 }
 
 export default App;
