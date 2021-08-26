@@ -5,6 +5,8 @@ import MessageInput from './MessageInput';
 import React, { useState, useEffect } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import Chats from '../Chats';
+import { useDispatch, useSelector } from 'react-redux'
+import { addMessage } from './chatSlice'
 
 
 
@@ -42,40 +44,36 @@ const useStyles = makeStyles((theme) => ({
 }))
 
 function Chat() {
-
-  const [inputMessage, setInputMessage] = useState("");
-  const [messagesArray, setmessagesArray] = useState([])
+  const { messagesArray } = useSelector((state) => state.chat);
+  const dispatch = useDispatch()
   const classes = useStyles();
 
   const onSendMessage = (messageText) => {
-    if (messageText !== "") {
-      var newMessage = Object.create(structureMessage);
 
-      newMessage.text = messageText
-      newMessage.time = new Date().toLocaleString();
-      newMessage.author = "user"
-      setmessagesArray(prev => [...prev, newMessage])
-      setInputMessage('')
+    if (messageText !== "") {
+      dispatch(addMessage({
+        text: messageText,
+        author: "user",
+        time: new Date().toLocaleString()
+      }))
     }
   }
 
   useEffect(() => {
     if (messagesArray.length !== 0 && messagesArray[messagesArray.length - 1].author === "user") {
       setTimeout(() => {
-        var newRobotMessage = Object.create(structureMessage);
-        console.log(messagesArray)
-        newRobotMessage.text = messagesArray[messagesArray.length - 1].text
-        newRobotMessage.time = new Date().toLocaleString();
-        newRobotMessage.author = "robot"
-
-        setmessagesArray(prev => [...prev, newRobotMessage])
+        dispatch(addMessage({
+          text: messagesArray[messagesArray.length - 1].text,
+          author: "robot",
+          time: new Date().toLocaleString()
+        }))
       }, getRandomInt(100, 2000));
 
     }
   }, [messagesArray])
 
 
-
+  console.log(messagesArray)
   function getRandomInt(min, max) {
     return Math.floor(Math.random() * (max - min)) + min;
   }
