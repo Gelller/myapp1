@@ -1,40 +1,31 @@
-import { MyDataContext } from '../index'
-import { useContext } from 'react'
-import { useSelector, useDispatch } from 'react-redux'
-import { Button } from '@material-ui/core'
-import { makeStyles } from '@material-ui/core/styles';
+import { useContext } from "react";
+import TextField from "@material-ui/core/TextField";
+import Button from "@material-ui/core/Button";
+import { makeStyles } from "@material-ui/core/styles";
+import { useSelector, useDispatch } from "react-redux";
+import { MyDataContext } from "../index";
 
+const useStyles = makeStyles(() => ({
+    noUnderline: {
+        "&>div": {
+            "&::before": {
+                border: "none !important",
+            },
+            "&::after": {
+                border: "none !important",
+            },
+        },
+    },
+}));
 
-const useStyles = makeStyles((theme) => ({
-
-}))
-
-
-const PlayGround = (props) => {
-    const classes = useStyles()
+const Playground = (props) => {
+    const classes = useStyles();
     const { messagesArray } = useSelector((state) => state.chat);
 
-    const dispatch = useDispatch()
-
     return (
-        <>
-
-            <div>Array Message :{messagesArray.map((message, i) => (<div key={i} > {message.author + ":" + message.text} <div className={classes.time}>{message.time}</div> </div>))}</div>
-        </>
-    )
+        <div>Playground</div>
+    );
+};
 
 
-}
-
-const withAuHoc = function (Component) {
-    return props => {
-        console.log('props', props)
-
-        return <Component userInfo={{ userId: 1, userName: 'qwer' }} {...props} />
-    }
-
-}
-
-
-
-export default withAuHoc(PlayGround)
+export default Playground;
