@@ -13,20 +13,20 @@ import Profile from './Profile';
 
 const App = () => {
 
-    return (<Router>
+    return (<Router key='rout'>
         <AppBar />
         <Switch>
-            <Router path="/profile">
+            <Router path="/profile" key='rout1'>
                 <Profile />
             </Router>
-            <Router path="/chat">
+            <Router path="/chat" key='rout2'>
                 <Chat />
             </Router>
-            <Router path="/playground">
+            <Router path="/playground" key='rout3' >
                 <PlayGround />
             </Router>
 
-            <Router path="/">
+            <Router path="/" key='rout4'>
                 <Home />
             </Router>
         </Switch>

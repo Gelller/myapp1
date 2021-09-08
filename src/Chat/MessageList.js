@@ -20,7 +20,9 @@ const useStyles = makeStyles((theme) => ({
     },
 }))
 
+
 const MessageList = ({ messagesArray }) => {
+
 
     const classes = useStyles();
     return (
