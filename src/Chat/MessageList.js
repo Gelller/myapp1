@@ -1,41 +1,56 @@
-import { makeStyles } from '@material-ui/core/styles';
-import PropsTypes from 'prop-types';
+import { makeStyles } from "@material-ui/core/styles";
+import PropTypes from "prop-types";
+import { useSelector } from "react-redux";
 
-const useStyles = makeStyles((theme) => ({
+const useStyles = makeStyles(() => ({
     messageList: {
-        width: '100%',
-        height: '90%',
-        borderBottom: '1px solid black',
+        width: "100%",
+        height: "90%",
+        borderBottom: "1px solid black",
+        overflow: "auto",
+        display: "flex",
+        flexDirection: "column",
     },
-    time: {
-        float: 'right',
-        fontSize: '12px',
-        margin: "0px 10px",
-        marginTop: '5px'
 
+    senderMessage: {
+        alignSelf: "flex-start",
     },
-    inputText: {
-        color: '#000080',
-        margin: "0px 10px",
+    userMessage: {
+        alignSelf: "flex-end",
     },
-}))
 
+    message: {
+        backgroundColor: "#A1A1A1",
+        padding: "5px",
+        margin: "10px 5px",
+        borderRadius: "30px",
+    },
+}));
 
 const MessageList = ({ messagesArray }) => {
-
-
     const classes = useStyles();
+    const { myId } = useSelector((state) => state.chat);
+
     return (
         <div className={classes.messageList}>
-            {
-                messagesArray.map((message, i) => (<div key={i} className={classes.inputText}> {message.author + ":" + message.text} <div className={classes.time}>{message.time}</div> </div>))
-            }
-
+            {messagesArray.map((message, i) => (
+                <div
+                    key={i}
+                    className={`
+            ${message.userId === myId
+                            ? classes.userMessage
+                            : classes.senderMessage
+                        } ${classes.message}`}
+                >
+                    {message.text}
+                </div>
+            ))}
         </div>
-    )
-}
-
-MessageList.prototype = {
-    messagesArray: PropsTypes.array.isRequired,
+    );
 };
-export default MessageList
+
+MessageList.propTypes = {
+    messagesArray: PropTypes.array.isRequired,
+};
+
+export default MessageList;

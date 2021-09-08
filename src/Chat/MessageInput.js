@@ -1,51 +1,48 @@
-import { useState } from 'react';
-import PropsTypes from 'prop-types';
-import { makeStyles } from '@material-ui/core/styles';
-import TextField from '@material-ui/core/TextField';
-import Button from '@material-ui/core/Button';
-
+import { useState } from "react";
+import PropTypes from "prop-types";
+import TextField from "@material-ui/core/TextField";
+import Button from "@material-ui/core/Button";
+import { makeStyles } from "@material-ui/core/styles";
 
 const useStyles = makeStyles((theme) => ({
-    button: {
-        margin: "0px 10px",
-    },
     input: {
         margin: "0px 10px",
         width: "70%",
     },
 
-    inputWrapper: {
-        flex: 1,
-        width: '100%',
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'space-between',
-        backgroundColor: theme.palette.secondary.main
+    button: {
     },
 
-}))
+    inputWrapper: {
+        flex: 1,
+        width: "100%",
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "space-between",
+    },
+}));
 
 const MessageInput = ({ onSendMessage }) => {
+    const classes = useStyles();
+    const [inputMessage, setInputMessage] = useState("");
 
     const sendAndRemoveInput = () => {
-        const trimmedMessageText = inputMessage.trim()
-
-        if (trimmedMessageText !== '') {
-            onSendMessage(trimmedMessageText)
-            setInputMessage('')
+        const trimmedMessageText = inputMessage.trim();
+        if (trimmedMessageText !== "") {
+            onSendMessage(trimmedMessageText);
+            setInputMessage("");
         }
+    };
 
-    }
-    const classes = useStyles()
-    const [inputMessage, setInputMessage] = useState("");
     return (
-        <div className={classes.inputWrapper} color="primary">
-            <TextField color="black" label="Введите сообщение" variant="filled"
+        <div className={classes.inputWrapper}>
+            <TextField
                 value={inputMessage}
-                onChange={e => setInputMessage(e.target.value)}
+                label="Введите сообщение"
+                onChange={(e) => setInputMessage(e.target.value)}
                 onKeyDown={({ key }) => {
-                    if (key === 'Enter') {
-                        sendAndRemoveInput()
+                    if (key === "Enter") {
+                        sendAndRemoveInput();
                     }
                 }}
                 // multiline
@@ -53,18 +50,22 @@ const MessageInput = ({ onSendMessage }) => {
                     root: classes.input,
                 }}
             />
-            <Button variant="contained" color="primary"
+            <Button
+                variant="contained"
+                color="primary"
                 onClick={sendAndRemoveInput}
                 classes={{
                     root: classes.button,
                 }}
-            >Отправить</Button>
+            >
+                Отправить
+            </Button>
         </div>
-    )
-}
+    );
+};
 
-MessageInput.prototype = {
-    onSendMessage: PropsTypes.func.isRequired,
+MessageInput.propTypes = {
+    onSendMessage: PropTypes.func.isRequired,
 };
 
 export default MessageInput;

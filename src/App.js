@@ -1,37 +1,43 @@
-import {
-    BrowserRouter as Router,
-    Switch,
-    Route,
-    Link
-} from "react-router-dom";
+import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
 import Chat from "./Chat";
-import PlayGround from "./Playground";
-import Home from './Home'
+import Playground from "./Playground";
+import Home from "./Home";
 import AppBar from "./AppBar";
-import Profile from './Profile';
+import { makeStyles } from "@material-ui/core/styles";
 
+const useStyles = makeStyles((theme) => ({
+    mainWrapper: {
+        width: "100vw",
+        height: "100vh",
+        display: "flex",
+    },
+}));
 
 const App = () => {
+    const classes = useStyles();
 
-    return (<Router key='rout'>
-        <AppBar />
-        <Switch>
-            <Router path="/profile" key='rout1'>
-                <Profile />
-            </Router>
-            <Router path="/chat" key='rout2'>
-                <Chat />
-            </Router>
-            <Router path="/playground" key='rout3' >
-                <PlayGround />
-            </Router>
+    return (
+        <Router>
+            <div className={classes.mainWrapper}>
+                <AppBar />
 
-            <Router path="/" key='rout4'>
-                <Home />
-            </Router>
-        </Switch>
-    </Router>)
+                <Switch>
+                    <Route path="/chat/:id">
+                        <Chat />
+                    </Route>
 
-}
+                    <Route path="/playground">
+                        <Playground myProps={1} />
+                    </Route>
 
-export default App
+                    <Route path="/">
+                        <Home />
+                    </Route>
+                </Switch>
+            </div>
+        </Router>
+    );
+};
+
+export default App;
+
