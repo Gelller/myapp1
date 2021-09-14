@@ -73,10 +73,12 @@ const routes = [
     },
     { pathTitle: "Chat", path: "/chat" },
     { pathTitle: "Playground", path: "/playground" },
+    { pathTitle: "Dog", path: "/dog" },
 ];
 
 const AppBar = () => {
     const classes = useStyles();
+    const history = useHistory();
 
     const { profiles, messages } = useSelector((state) => state.chat);
 
@@ -113,6 +115,7 @@ const AppBar = () => {
                 >
                     <MenuItem key={1}>Профиль</MenuItem>
                     <MenuItem key={2}>Настройки</MenuItem>
+                    <MenuItem key={3} onClick={() => history.push('/dog')}>Собаки</MenuItem>
                 </Menu>
 
                 <TextField
@@ -134,7 +137,7 @@ const AppBar = () => {
                     <ChatPreview profile={profile} messages={messages[profile.id]} />
                 ))}
             </Box>
-        </Drawer>
+        </Drawer >
     );
 };
 
