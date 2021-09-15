@@ -39,6 +39,7 @@ const useStyles = makeStyles((theme) => ({
         width: "350px",
         height: "100%",
         padding: "10px 10px 0px 10px",
+
     },
 
     topComponent: {
@@ -76,10 +77,8 @@ const routes = [
 
 const AppBar = () => {
     const classes = useStyles();
-    const location = useLocation();
-    const history = useHistory();
 
-    const { chats } = useSelector((state) => state.chat);
+    const { profiles, messages } = useSelector((state) => state.chat);
 
     const [anchorEl, setAnchorEl] = useState(null);
     const open = Boolean(anchorEl);
@@ -131,13 +130,11 @@ const AppBar = () => {
             </Box>
 
             <Box className={classes.chatWrapper}>
-                {chats.map((chat) => (
-                    <ChatPreview chat={chat} />
+                {profiles.map((profile) => (
+                    <ChatPreview profile={profile} messages={messages[profile.id]} />
                 ))}
             </Box>
         </Drawer>
-
-
     );
 };
 
