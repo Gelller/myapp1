@@ -1,10 +1,13 @@
 import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
+import CustomRoute from "./util/CustomRoute";
 import Chat from "./Chat";
 import Playground from "./Playground";
-import Dog from "./Dog"
+import Dog from "./Dog";
 import Home from "./Home";
-import AppBar from "./AppBar";
+import Signup from "./Auth/Singup";
+import Login from "./Auth/Login";
 import { makeStyles } from "@material-ui/core/styles";
+import firebase from "firebase/compat";
 
 const useStyles = makeStyles((theme) => ({
     mainWrapper: {
@@ -14,28 +17,49 @@ const useStyles = makeStyles((theme) => ({
     },
 }));
 
+export const firebaseConfig = {
+    apiKey: "AIzaSyAGzzTptYi5WoqzrqyUsMkDo9Saib4QM4Y",
+    authDomain: "myapp1-2b4d3.firebaseapp.com",
+    projectId: "myapp1-2b4d3",
+    databaseURL: "https://myapp1-2b4d3-default-rtdb.europe-west1.firebasedatabase.app",
+    storageBucket: "myapp1-2b4d3.appspot.com",
+    messagingSenderId: "414188414927",
+    appId: "1:414188414927:web:d893652fd338d967f014ba"
+};
+
+firebase.initializeApp(firebaseConfig);
+export const db = firebase.database();
+
 const App = () => {
     const classes = useStyles();
 
     return (
         <Router>
             <div className={classes.mainWrapper}>
-                <AppBar />
+                {/* <AppBar /> */}
 
                 <Switch>
-                    <Route path="/chat/:id">
+                    <CustomRoute secured path="/chat/:id">
                         <Chat />
-                    </Route>
+                    </CustomRoute>
 
-                    <Route path="/playground">
+                    <CustomRoute path="/playground" secured withAppBar={true}>
                         <Playground myProps={1} />
-                    </Route>
+                    </CustomRoute>
 
-                    <Route path="/dog">
+                    <Route path="/dog" secured withAppBar={true}>
                         <Dog />
                     </Route>
 
-                    <Route path="/">
+                    <Route path="/login">
+                        <Login />
+                    </Route>
+
+                    <Route path="/signup">
+                        <Signup />
+                    </Route>
+
+                    <Route path="/" withAppBar={false}>
                         <Home />
                     </Route>
                 </Switch>

@@ -37,19 +37,20 @@ const MessageList = ({ messagesArray }) => {
     const { myId } = useSelector((state) => state.chat);
 
     return (
-        <div className={classes.messageList}>
-            {messagesArray.map((message, i) => (
-                <div
-                    key={i}
-                    className={`
+        <div className={`${classes.messageList} messageList`}>
+            {messagesArray &&
+                messagesArray.map((message, i) => (
+                    <div
+                        key={i}
+                        className={`
             ${message.authorId === myId
-                            ? classes.userMessage
-                            : classes.senderMessage
-                        } ${classes.message}`}
-                >
-                    {message.text}
-                </div>
-            ))}
+                                ? classes.userMessage
+                                : classes.senderMessage
+                            } ${classes.message}`}
+                    >
+                        {message.messageText}
+                    </div>
+                ))}
         </div>
     );
 };
