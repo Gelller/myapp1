@@ -9,7 +9,7 @@ import { configureStore, combineReducers } from "@reduxjs/toolkit";
 const persistConfig = {
     key: "root",
     storage,
-    blacklist: ["dog"],
+    blacklist: ["dog", "chat"],
 };
 
 const reducers = combineReducers({ chat: chatReducer, dog: dogReducer });

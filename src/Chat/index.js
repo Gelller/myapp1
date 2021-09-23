@@ -1,76 +1,69 @@
+import { createSlice } from "@reduxjs/toolkit";
+import moment from "moment";
 
-import React, { useEffect, useState } from "react";
-import { useDispatch, useSelector } from "react-redux";
-import { addMessage } from "./chatSlice";
-import MessageList from "./MessageList";
-import MessageInput from "./MessageInput";
-import { makeStyles } from "@material-ui/core/styles";
-import { useParams } from "react-router-dom";
-
-const useStyles = makeStyles((theme) => ({
-  chatWrapper: {
-    height: "100%",
-    width: "100%",
-    display: "flex",
-    justifyContent: "center",
-    alignItems: "center",
-    backgroundColor: "#0F0F0F",
+export const chatSlice = createSlice({
+  name: "chat",
+  initialState: {
+    isAuthenticated: false,
+    myUid: "",
+    messages: {},
+    chats: {
+      // {
+      //   id: 2,
+      //   name: "Joe Doe",
+      //   avatar: "https://material-ui.com/static/images/avatar/1.jpg",
+      // },
+      // {
+      //   id: 3,
+      //   name: "Иван Кузнецов",
+      //   avatar: "https://material-ui.com/static/images/avatar/2.jpg",
+      // },
+    },
   },
+  reducers: {
+    addMessage: (state, action) => {
+      const { chatId, messageText, authorId } = action.payload;
+      state.messages = {
+        ...state.messages,
+        [chatId]: [
+          ...state.messages[chatId],
+          {
+            timeStamp: moment().valueOf(),
+            authorId,
+            text: messageText,
+          },
+        ],
+      };
+    },
 
-  componentWrapper: {
-    width: "600px",
-    height: "800px",
-    display: "flex",
-    flexDirection: "column",
+    setMessages: (state, action) => {
+      const { chatId, messages } = action.payload;
+      state.messages = {
+        ...state.messages,
+        [chatId]: messages,
+      };
+    },
+
+    changeIsAuth: (state, action) => {
+      state.isAuthenticated = action.payload;
+    },
+
+    setChat: (state, action) => {
+      // const { targetUid, chatId } = action.payload;
+      state.chats = {
+        ...state.chats,
+        ...action.payload,
+      };
+    },
+
+    setMyUid: (state, action) => {
+      state.myUid = action.payload;
+    },
   },
-}));
+});
 
-const sendMessaesWithThunk = (message) => (dispatch, getState) => {
-  const { chat } = getState()
-  const myId = chat.myId
-  dispatch(addMessage(message))
-  if (message.authorId === myId) {
-    const botMessage = {
-      chatId: message.chatId,
-      messageText: " i am robot",
-      authorId: message.chatId,
-    };
-    setTimeout(() => dispatch(addMessage(botMessage)), 1500)
+// Action creators are generated for each case reducer function
+export const { addMessage, changeIsAuth, setMessages, setMyUid, setChat } =
+  chatSlice.actions;
 
-  }
-}
-
-
-function Chat() {
-  const urlParams = useParams();
-  const chatId = Number.parseInt(urlParams.id);
-
-  const messages = useSelector((state) => state.chat.messages[chatId]);
-  const myId = useSelector((state) => state.chat.myId);
-  const dispatch = useDispatch();
-
-  const classes = useStyles();
-
-  const onSendMessage = (messageText) => {
-    dispatch(sendMessaesWithThunk({ chatId, messageText, authorId: myId }));
-  };
-
-  useEffect(() => {
-    if (messages.length > 0) {
-      setTimeout(() => {
-        // console.log("Message was sent");
-      }, 1000);
-    }
-  }, [messages]);
-
-  return (
-    <div className={classes.chatWrapper}>
-      <div className={classes.componentWrapper}>
-        <MessageList messagesArray={messages} />
-        <MessageInput onSendMessage={onSendMessage} />
-      </div>
-    </div>
-  );
-}
-
-export default Chat;
+export default chatSlice.reducer;

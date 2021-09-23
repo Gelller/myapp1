@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { AppBar as MaterialUiAppBar } from "@material-ui/core";
+import { AppBar as MaterialUiAppBar, Button } from "@material-ui/core";
 import { useDispatch, useSelector } from "react-redux";
 import InputAdornment from "@material-ui/core/InputAdornment";
 import Toolbar from "@material-ui/core/Toolbar";
@@ -15,6 +15,7 @@ import MenuItem from "@material-ui/core/MenuItem";
 import TextField from "@material-ui/core/TextField";
 import SearchIcon from "@material-ui/icons/Search";
 import ChatPreview from "./ChatPreview";
+import { addChatToFirebase } from "./actions";
 
 const useStyles = makeStyles((theme) => ({
     link: {
@@ -39,7 +40,6 @@ const useStyles = makeStyles((theme) => ({
         width: "350px",
         height: "100%",
         padding: "10px 10px 0px 10px",
-
     },
 
     topComponent: {
@@ -73,14 +73,13 @@ const routes = [
     },
     { pathTitle: "Chat", path: "/chat" },
     { pathTitle: "Playground", path: "/playground" },
-    { pathTitle: "Dog", path: "/dog" },
+    { pathTitle: "Cats", path: "/cats" },
 ];
 
 const AppBar = () => {
     const classes = useStyles();
     const history = useHistory();
-
-    const { profiles, messages } = useSelector((state) => state.chat);
+    const { chats, messages, myUid } = useSelector((state) => state.chat);
 
     const [anchorEl, setAnchorEl] = useState(null);
     const open = Boolean(anchorEl);
@@ -91,6 +90,13 @@ const AppBar = () => {
 
     const handleClose = () => {
         setAnchorEl(null);
+    };
+
+    const [uId, setuID] = useState("");
+
+    const onAddChat = () => {
+        // console.log('button click')
+        addChatToFirebase(myUid, uId);
     };
 
     return (
@@ -113,9 +119,11 @@ const AppBar = () => {
                     anchorPosition={{ top: 50, left: 25 }}
                     anchorReference={"anchorPosition"}
                 >
-                    <MenuItem key={1}>Профиль</MenuItem>
-                    <MenuItem key={2}>Настройки</MenuItem>
-                    <MenuItem key={3} onClick={() => history.push('/dog')}>Собаки</MenuItem>
+                    <MenuItem key={1} onClick={() => history.push("/cats")}>
+                        Коты
+                    </MenuItem>
+                    <MenuItem key={2}>Профиль</MenuItem>
+                    <MenuItem key={3}>Настройки</MenuItem>
                 </Menu>
 
                 <TextField
@@ -133,11 +141,20 @@ const AppBar = () => {
             </Box>
 
             <Box className={classes.chatWrapper}>
-                {profiles.map((profile) => (
-                    <ChatPreview profile={profile} messages={messages[profile.id]} />
+                {Object.keys(chats).map((uid) => (
+                    <ChatPreview
+                        // profile={profile}
+                        uid={uid}
+                    // messages={messages[profile.id] || []}
+                    />
                 ))}
             </Box>
-        </Drawer >
+
+            <Box>
+                <TextField value={uId} onChange={(e) => setuID(e.target.value)} />
+                <Button onClick={onAddChat}>Добавить</Button>
+            </Box>
+        </Drawer>
     );
 };
 
