@@ -8,6 +8,7 @@ import Signup from "./Auth/Singup";
 import Login from "./Auth/Login";
 import { makeStyles } from "@material-ui/core/styles";
 import firebase from "firebase/compat";
+import { useAuthState } from "react-firebase-hooks/auth";
 
 const useStyles = makeStyles((theme) => ({
     mainWrapper: {
@@ -20,8 +21,8 @@ const useStyles = makeStyles((theme) => ({
 export const firebaseConfig = {
     apiKey: "AIzaSyAGzzTptYi5WoqzrqyUsMkDo9Saib4QM4Y",
     authDomain: "myapp1-2b4d3.firebaseapp.com",
-    projectId: "myapp1-2b4d3",
     databaseURL: "https://myapp1-2b4d3-default-rtdb.europe-west1.firebasedatabase.app",
+    projectId: "myapp1-2b4d3",
     storageBucket: "myapp1-2b4d3.appspot.com",
     messagingSenderId: "414188414927",
     appId: "1:414188414927:web:d893652fd338d967f014ba"
@@ -33,6 +34,11 @@ export const db = firebase.database();
 const App = () => {
     const classes = useStyles();
 
+    const [user, loading] = useAuthState(firebase.auth());
+
+    if (loading) {
+        return <div>Loading</div>;
+    }
     return (
         <Router>
             <div className={classes.mainWrapper}>
@@ -69,4 +75,3 @@ const App = () => {
 };
 
 export default App;
-
