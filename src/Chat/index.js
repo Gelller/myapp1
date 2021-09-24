@@ -1,11 +1,10 @@
-
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { addMessage } from "./chatSlice";
 import MessageList from "./MessageList";
 import MessageInput from "./MessageInput";
 import { makeStyles } from "@material-ui/core/styles";
 import { useParams } from "react-router-dom";
+import { sendMessageWithThunk, initMessageTracking } from "./actions";
 
 const useStyles = makeStyles((theme) => ({
   chatWrapper: {
@@ -25,43 +24,29 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const sendMessaesWithThunk = (message) => (dispatch, getState) => {
-  const { chat } = getState()
-  const myId = chat.myId
-  dispatch(addMessage(message))
-  if (message.authorId === myId) {
-    const botMessage = {
-      chatId: message.chatId,
-      messageText: " i am robot",
-      authorId: message.chatId,
-    };
-    setTimeout(() => dispatch(addMessage(botMessage)), 1500)
-
-  }
-}
-
-
 function Chat() {
   const urlParams = useParams();
   const chatId = Number.parseInt(urlParams.id);
 
   const messages = useSelector((state) => state.chat.messages[chatId]);
+
+  console.log(messages, 'MESSAGES');
   const myId = useSelector((state) => state.chat.myId);
   const dispatch = useDispatch();
 
   const classes = useStyles();
 
   const onSendMessage = (messageText) => {
-    dispatch(sendMessaesWithThunk({ chatId, messageText, authorId: myId }));
+    dispatch(sendMessageWithThunk({ chatId, messageText, authorId: myId }));
   };
 
   useEffect(() => {
-    if (messages.length > 0) {
-      setTimeout(() => {
-        // console.log("Message was sent");
-      }, 1000);
+    if (document.getElementsByClassName("messageList")[0]) {
+      document.getElementsByClassName("messageList")[0].scrollTop = 999999;
     }
-  }, [messages]);
+  });
+
+
 
   return (
     <div className={classes.chatWrapper}>
